@@ -35,6 +35,8 @@ if (isset($_POST['add_quotation'])) {
         $quot_proj_duration = $_POST['quot_proj_duration'] . " Day";
     } else if ($days == "Month") {
         $quot_proj_duration = $_POST['quot_proj_duration'] . " Month";
+    } else if ($days == "Week") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Week";
     } else {
         $quot_proj_duration = $_POST['quot_proj_duration'] . " Year";
     }
@@ -365,4 +367,235 @@ if (isset($_POST['test'])) {
             // }
         }
     }
+}
+
+if (isset($_POST['add_direct_award'])) {
+    $branch = $_POST['quot_branch'];
+    $project_location = $_POST['project_location'];
+    // echo $project_location;
+    if ($project_location == 'Johor') {
+        $word = 'J';
+    } elseif ($project_location == 'Perak') {
+        $word = 'A';
+    } elseif ($project_location == 'Selangor') {
+        $word = 'B';
+    } elseif ($project_location == 'Pahang') {
+        $word = 'C';
+    } elseif ($project_location == 'Kelantan') {
+        $word = 'D';
+    } elseif ($project_location == 'Kedah') {
+        $word = 'K';
+    } elseif ($project_location == 'Melaka') {
+        $word = 'M';
+    } elseif ($project_location == 'Negeri Sembilan') {
+        $word = 'N';
+    } elseif ($project_location == 'Pulau Pinang') {
+        $word = 'P';
+    } elseif ($project_location == 'Perlis') {
+        $word = 'R';
+    } elseif ($project_location == 'Terengganu') {
+        $word = 'T';
+    } elseif ($project_location == 'Kuala Lumpur') {
+        $word = 'V';
+    } elseif ($project_location == 'Sarawak') {
+        $word = 'Q';
+    } elseif ($project_location == 'Sabah') {
+        $word = 'S';
+    } else {
+        // header('location: quotation.php?=State+Not+Exist');
+    }
+
+    $award_date = $_POST['s_award_date'];
+    $year = date("Y", strtotime($award_date));
+    $year2 = date("y", strtotime($award_date));
+
+    $check_data = mysqli_query($conn, "SELECT s_proj_no, s_no_inc FROM securement WHERE year(s_award_date) = '$year' AND s_branch = '$branch' ORDER BY s_no_inc desc");
+    if (mysqli_num_rows($check_data) == 0) {
+        echo '';
+    } else {
+        $row = mysqli_fetch_assoc($check_data);
+        $lastid = $row['s_proj_no'];
+    }
+
+    if ($branch == "HQ") {
+        $code = "";
+        // echo strlen($lastid);
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . $word . "001";
+            $id = '001';
+        } else {
+            if (strlen($lastid) == 10) {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+                // echo $number;
+            } else {
+                // echo $lastid . "<br>";
+                // $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                // echo $idd . "<br>";
+                $idd = substr($lastid, 10);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+            }
+        }
+        echo $number;
+    } else if ($branch == "Pahang") {
+        $code = "(C)";
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . $word . "001";
+            $id = '001';
+            echo $number . "asdasd";
+        } else {
+            if (strlen($lastid) == 10) {
+                // $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+            } else {
+                // $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 10);
+                echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                echo $id;
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+            }
+        }
+    } else {
+        $code = "(J)";
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . $word . "001";
+            $id = '001';
+        } else {
+            if (strlen($lastid) == 10) {
+                // $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+            } else {
+                // $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 10);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . $word . $id;
+            }
+        }
+    }
+
+    $client_id = $_POST['quot_client'];
+    $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
+    $result_client = mysqli_query($conn, $retrieve_client);
+    while ($client = mysqli_fetch_assoc($result_client)) {
+        $quot_client = $client['client_comp_name'];
+        $quot_client_pic = $client['client_pic'];
+        $quot_client_phone = $client['client_phone'];
+        $quot_client_email = $client['client_email'];
+    }
+
+    $quot_title = $_POST['quot_title'];
+    $quot_no = uniqid();
+    $proj_code = $_POST['s_proj_code'];
+    $proj_pic = $_POST['s_proj_pic'];
+    $proj_deadline = $_POST['s_proj_deadline'];
+    $quot_market_segmentation = $_POST['quot_market_segmentation'];
+    $quot_site_location = $_POST['quot_site_location'];
+    $quot_work_scope = $_POST['quot_work_scope'];
+
+    $days = $_POST['days'];
+    if ($days == "Day") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Day";
+    } else if ($days == "Month") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Month";
+    } else if ($days == "Week") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Week";
+    } else {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Year";
+    }
+
+    $quot_amount = $_POST['quot_amount'];
+
+    if (isset($_POST['tax'])) {
+        $taxed = $quot_amount / 1.06;
+        // $after_tax = $quot_amount - $taxed;
+        $quot_amount_tax = round($taxed, 2);
+    } else {
+        $quot_amount_tax = $quot_amount;
+    }
+
+    $quot_type = $_POST['quot_type'];
+
+    $sql = "INSERT INTO securement (
+        s_award_date,
+        s_quot_no,
+        s_proj_no,
+        s_branch,
+        s_proj_code,
+        s_proj_pic,
+        s_proj_deadline,
+        s_status,
+        s_no_inc
+    ) VALUES (
+        '$award_date',
+        '$quot_no',
+        '$number',
+        '$branch',
+        '$proj_code',
+        '$proj_pic',
+        '$proj_deadline',
+        'pending',
+        '$id'
+    )";
+
+    $result = mysqli_query($conn, $sql);
+
+    $sql2 = "INSERT INTO quotation (
+        quot_no,
+        quot_type,
+        quot_branch,
+        quot_title,
+        quot_market_segmentation,
+        quot_site_location,
+        quot_work_scope,
+        quot_proj_duration,
+        quot_amount,
+        quot_amount_tax,
+        quot_client,
+        quot_client_pic,
+        quot_client_phone,
+        quot_client_email,
+        quot_client_type,
+        quot_client_status
+    ) VALUES (
+        '$quot_no',
+        '$quot_type',
+        '$branch',
+        '$quot_title',
+        '$quot_market_segmentation',
+        '$quot_site_location',
+        '$quot_work_scope',
+        '$quot_proj_duration',
+        '$quot_amount',
+        '$quot_tax',
+        '$quot_client',
+        '$quot_client_pic',
+        '$quot_client_phone',
+        '$quot_client_email',
+        '$quot_client_type',
+        '$quot_client_status'
+    )";
+
+    $_SESSION['status_code'] = 'success';
+    $_SESSION['message'] = "Success!";
+
+    $user = $_SESSION['staff_no'];
+    $log_title = "Approved quotation : " . $quot_no;
+    $log_status = "Success";
+    $log_sql = "INSERT INTO log (log_title, log_user, log_status) VALUES ('$log_title','$user','$log_status')";
+    $log_result = mysqli_query($conn, $log_sql);
+    header('location: securement.php');
 }

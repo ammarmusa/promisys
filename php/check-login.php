@@ -36,7 +36,7 @@ if (isset($_POST['staff_no']) && isset($_POST['password'])) {
 			} else {
 
 				if ($row['password'] === $password) {
-					if($row['status'] === 'Active') {
+					if ($row['status'] === 'Active') {
 						$_SESSION['staff_no'] = $row['staff_no'];
 						$get_branch = mysqli_query($conn, "SELECT branch FROM staff WHERE staff_number = '$staff_no'");
 						while ($gb = mysqli_fetch_assoc($get_branch)) {
@@ -49,8 +49,8 @@ if (isset($_POST['staff_no']) && isset($_POST['password'])) {
 						$_SESSION['shortform'] = $row['shortform'];
 						$_SESSION['special'] = $row['special'];
 						$user = $row['staff_no'];
-	
-						if ($_SESSION['role'] == 'admin') {
+
+						if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') {
 							// $log_title = "Logged in";
 							// $log_status = "Success";
 							// $log_sql = "INSERT INTO log (log_title, log_user, log_status) VALUES ('$log_title','$user','$log_status')";

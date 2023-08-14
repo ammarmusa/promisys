@@ -1,0 +1,9 @@
+14/8/2023
+*********
+
+Redefine user role
+    1) Superuser - Able to view all project data, user, and make change on the system.
+    2) Admin - Able to view all prject data
+    3) User - Only can view & manipulate data from own branch 
+
+Create manage user module for Superuser

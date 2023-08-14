@@ -5,7 +5,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "include_header.php";
     include "alert.php";
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
 
         <?php
         $year = date("Y");
@@ -95,7 +95,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                 <a href="inquiry.php" class="btn btn-primary">Inquiry</a>
             </div>
         </div>
-        
+
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>

@@ -9,11 +9,11 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
         <div class="mb-3 mt-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Add Quotation
+                    <span><i class="bi bi-table me-2"></i></span> Add Tender
                 </div>
                 <div class="card-body">
                     <form action="quotation_process.php" method="post" class="" enctype='multipart/form-data'>
-                        <input type="hidden" name="quot_type" value="QUOTATION">
+                        <input type="hidden" name="quot_type" value="TENDER">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="date" class="col-form-label ">Apply Date</label>

@@ -22,7 +22,7 @@
 
 <body>
     <!-- top navigation bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark <?= $_SESSION['role'] === 'superuser' ? 'bg-warning' : 'bg-dark' ?> fixed-top">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
                 <span class="navbar-toggler-icon" data-bs-target="#sidebar"></span>
@@ -61,7 +61,7 @@
     $components = explode('/', $path);
     $first_part = $components[2];
     ?>
-    <div class="offcanvas offcanvas-start sidebar-nav bg-dark" tabindex="-1" id="sidebar" style="font-size:1.1em">
+    <div class="offcanvas offcanvas-start sidebar-nav <?= $_SESSION['role'] === 'superuser' ? 'bg-warning' : 'bg-dark' ?>" tabindex="-1" id="sidebar" style="font-size:1.1em">
         <div class="offcanvas-body p-0">
             <nav class="navbar-dark">
                 <ul class="navbar-nav" style="font-size: 90%;">
@@ -164,10 +164,10 @@
 
                     <li>
                         <a href="form_list.php" class="nav-link px-3 <?php if ($first_part == "form_list.php") {
-                                                                                echo "active";
-                                                                            } else {
-                                                                                echo "";
-                                                                            } ?>">
+                                                                            echo "active";
+                                                                        } else {
+                                                                            echo "";
+                                                                        } ?>">
                             <span class="me-2"><i class="bi bi-file-earmark-pdf"></i></span>
                             <span>Form</span>
                         </a>
@@ -215,6 +215,22 @@
                                                                             } ?>">
                                 <span class="me-2"><i class="bi bi-list-columns-reverse"></i></span>
                                 <span>System Log</span>
+                            </a>
+                        </li>
+                    <?php
+                    }
+                    ?>
+                    <?php
+                    if ($_SESSION['role'] === 'superuser') {
+                    ?>
+                        <li>
+                            <a href="manage_user.php" class="nav-link px-3 <?php if ($first_part == "manage_user.php") {
+                                                                                echo "active";
+                                                                            } else {
+                                                                                echo "";
+                                                                            } ?>">
+                                <span class="me-2"><i class="bi bi-people"></i></span>
+                                <span>Manage User</span>
                             </a>
                         </li>
                     <?php

@@ -9,15 +9,15 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
         <div class="mb-3 mt-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Add Quotation
+                    <span><i class="bi bi-table me-2"></i></span> Add Direct Award
                 </div>
                 <div class="card-body">
                     <form action="quotation_process.php" method="post" class="" enctype='multipart/form-data'>
-                        <input type="hidden" name="quot_type" value="QUOTATION">
+                        <input type="hidden" name="quot_type" value="DIRECT AWARD">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="date" class="col-form-label ">Apply Date</label>
-                                <input type="date" name="apply_date" class="form-control" required>
+                                <label for="date" class="col-form-label ">Award Date</label>
+                                <input type="date" name="s_award_date" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label for="date" class="col-form-label ">Project Location</label>
@@ -53,10 +53,14 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <label for="date" class="mt-3 col-form-label">Project Title: </label>
                             <textarea class="form-control" name="quot_title" type="text" placeholder="" required></textarea>
                         </div>
+                        <div class="col-md-12">
+                            <label for="date" class="mt-3 col-form-label">Project Code: </label>
+                            <input class="form-control" name="s_proj_code" type="text" placeholder="" required />
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="date" class="col-form-label mt-3">Person Incharge:</label>
-                                <select class="form-select" name="quot_pic" aria-label="Default select example" required>
+                                <select class="form-select" name="s_proj_pic" aria-label="Default select example" required>
                                     <option selected value="">Open this select menu</option>
                                     <?php
                                     $user = mysqli_query($conn, "SELECT shortform FROM users");
@@ -173,21 +177,14 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="date" class="col-form-label mt-3">Submission deadline:</label>
-                                <input type="date" name="quot_sub_deadline" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="date" class="col-form-label mt-3">Supporting files:</label>
-                                <input name="upload[]" type="file" multiple="multiple" class="form-control" />
+                                <label for="date" class="col-form-label mt-3">Project deadline:</label>
+                                <input type="date" name="s_proj_deadline" class="form-control">
                             </div>
                         </div>
 
                         <div class="mt-5">
                             <!-- <button type="submit" class="btn btn-primary" name="add_quotation">Submit</button> -->
-                            <button type="submit" class="btn btn-primary" name="add_quotation">Submit</button>
+                            <button type="submit" class="btn btn-primary" name="add_direct_award">Submit</button>
                             <a href="quotation.php" class="btn btn-danger">
                                 Cancel</a>
                         </div>

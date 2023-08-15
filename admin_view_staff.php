@@ -6,7 +6,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $id = $_GET['id'];
 ?>
-    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true') { ?>
+    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true' || $_SESSION['role'] == 'superuser') { ?>
         <div class="row mt-3">
             <?php
             $retrieve_staff = mysqli_query($conn, "SELECT * FROM staff WHERE id='$id'");
@@ -20,7 +20,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <?php
                             $sql_2 = "SELECT * FROM users WHERE staff_no = '$staff'";
                             $res_2 = mysqli_query($conn, $sql_2);
-                            while($r = mysqli_fetch_assoc($res_2)){
+                            while ($r = mysqli_fetch_assoc($res_2)) {
                                 $user_id = $r['id'];
                                 echo $user_id;
                             }
@@ -32,9 +32,9 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <?php
                             }
                             ?>
-                             <button type="button" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Promisys
-                                </button>
+                            <button type="button" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Promisys
+                            </button>
                             <a href="staff_edit.php?id=<?= $id ?>" class="btn btn-sm btn-dark float-end" style="margin-right: 10px">
                                 Update</a>
 
@@ -42,70 +42,70 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 <i class="bi bi-arrow-left-square"></i></a>
 
                         </div>
-                        
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
 
                                 <?php
-                                if($registered === 'true'){
-                                    ?>
-                                     <div class="modal-content">
+                                if ($registered === 'true') {
+                                ?>
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">Remove user from Promisys</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <form action="staff_process.php" method="post">
                                             <div class="modal-body">
-                                                    <p>Are you sure?</p>
-                                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                                <p>Are you sure?</p>
+                                                <input type="hidden" name="user_id" value="<?= $user_id ?>">
                                             </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" name="delete_promisys" class="btn btn-danger">Remove</button>
-                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" name="delete_promisys" class="btn btn-danger">Remove</button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <?php
+                                <?php
                                 } else {
-                                    ?>
+                                ?>
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">Register staff to Promisys</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <form action="staff_process.php" method="post">
-                                        <div class="modal-body">
-                                       
-                                            <div class="">
-                                                <input type="hidden" name="id" value="<?= $rows['id'] ?>">
-                                                <input type="hidden" name="staff_no" value="<?= $staff ?>">
-                                                <input type="hidden" name="staff_name" value="<?= $rows['staff_name'] ?>">
-                                                <input type="hidden" name="staff_ic" value="<?= $rows['staff_ic'] ?>">
-                                                <input type="hidden" name="staff_initial" value="<?= $rows['staff_initial'] ?>">
-                                                <label for="role" class="col-form-label">Role</label>
-                                                <select class="form-select" name="role" aria-label="Default select example" required>
-                                                    <option selected value="">Open this select menu</option>
-                                                    <option value="admin">admin</option>
-                                                </select>
-                                                <div class="form-check form-switch mt-2">
-                                                    <input class="form-check-input" type="checkbox" name="special_role" id="flexSwitchCheckDefault">
-                                                    <label class="form-check-label" for="flexSwitchCheckDefault">Special role</label>
+                                            <div class="modal-body">
+
+                                                <div class="">
+                                                    <input type="hidden" name="id" value="<?= $rows['id'] ?>">
+                                                    <input type="hidden" name="staff_no" value="<?= $staff ?>">
+                                                    <input type="hidden" name="staff_name" value="<?= $rows['staff_name'] ?>">
+                                                    <input type="hidden" name="staff_ic" value="<?= $rows['staff_ic'] ?>">
+                                                    <input type="hidden" name="staff_initial" value="<?= $rows['staff_initial'] ?>">
+                                                    <label for="role" class="col-form-label">Role</label>
+                                                    <select class="form-select" name="role" aria-label="Default select example" required>
+                                                        <option selected value="">Open this select menu</option>
+                                                        <option value="admin">admin</option>
+                                                    </select>
+                                                    <div class="form-check form-switch mt-2">
+                                                        <input class="form-check-input" type="checkbox" name="special_role" id="flexSwitchCheckDefault">
+                                                        <label class="form-check-label" for="flexSwitchCheckDefault">Special role</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" name="add_promisys" class="btn btn-primary">Submit</button>
-                                        </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" name="add_promisys" class="btn btn-primary">Submit</button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <?php
+                                <?php
                                 }
                                 ?>
-                                    
-                                </div>
+
                             </div>
-                        
+                        </div>
+
                         <div class="card-body">
 
                             <section style="background-color: #f4f5f7;">

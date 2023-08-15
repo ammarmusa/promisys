@@ -6,7 +6,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $id = $_GET['id'] ?? null;
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
         <?php
         $sql = "SELECT * FROM manage WHERE manage_id='$id'";
         $res = mysqli_query($conn, $sql);
@@ -242,11 +242,11 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                                         <input type="hidden" class="doc_id" name="doc_id" id="doc_id" value="<?= $rows_doc['doc_id'] ?>">
                                                         <?php
                                                         $extension = explode('.', $rows_doc['doc_name']);
-                                                        if($extension[1] == 'kml' || $extension[1] == 'kmz') {
-                                                            ?>
+                                                        if ($extension[1] == 'kml' || $extension[1] == 'kmz') {
+                                                        ?>
                                                             <a href="load_kml.php?file=<?= $rows_doc['doc_path'] ?>" title="View Data" target="_blank" style="margin-right: 10px">
-                                                            <span class="badge bg-primary"><i class="bi bi-globe-asia-australia"></i></span></a>
-                                                            <?php
+                                                                <span class="badge bg-primary"><i class="bi bi-globe-asia-australia"></i></span></a>
+                                                        <?php
                                                         }
                                                         ?>
                                                         <a href="<?= $rows_doc['doc_path'] ?>" title="Download" style="margin-right: 10px">

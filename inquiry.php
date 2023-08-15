@@ -6,7 +6,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $user = $_SESSION['shortform'];
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
         <div class="row mt-3">
             <div class="col-md-2 d-grid gap-2">
                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#Request">Contract Partner</button>
@@ -23,9 +23,9 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 <div class="modal-body">
                                     <input type="text" class="form-control mb-2" name="noti_body" placeholder="Remark" required>
                                     <label for="date" class="col-form-label">Form :</label>
-                                    <input name="upload[]" type="file" class="form-control" required/>
+                                    <input name="upload[]" type="file" class="form-control" required />
                                 </div>
-         
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary" name="req_new_partner">Send Request</button>
@@ -50,9 +50,9 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 <div class="modal-body">
                                     <input type="text" class="form-control mb-2" name="noti_body" placeholder="Remark" required>
                                     <label for="date" class="col-form-label mt-3">Screenshot :</label>
-                                    <input name="upload[]" type="file" class="form-control" required/>
+                                    <input name="upload[]" type="file" class="form-control" required />
                                 </div>
-         
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary" name="bug_report">Send Request</button>
@@ -80,7 +80,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                     <label for="date" class="col-form-label mt-3">Supporting file :</label>
                                     <input name="upload[]" type="file" class="form-control" />
                                 </div>
-         
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary" name="other_report">Send Request</button>
@@ -128,7 +128,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                     <?php
 
                                     while ($rows = mysqli_fetch_assoc($retrieve_staff)) {
-                                        if($rows['noti_path'] == '') {
+                                        if ($rows['noti_path'] == '') {
                                             $disabled = 'eye-slash';
                                             $class = 'secondary';
                                         } else {
@@ -138,7 +138,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                         $timestamp = strtotime($rows['noti_timestamp']);
                                         $date = date("d/m/Y", $timestamp);
                                         $status = $rows['noti_status'];
-                                        if($status == 'Applied') {
+                                        if ($status == 'Applied') {
                                             $stat_code = "<span class='badge bg-warning text-dark'>Applied</span>";
                                         } else if ($status == 'Done') {
                                             $stat_code = "<span class='badge bg-success'>Done</span>";
@@ -154,16 +154,16 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                             <td>
                                                 <div class="d-flex justify-content-center find_noti_id">
                                                     <?php
-                                                    if($status == 'Applied') {
-                                                        ?>
+                                                    if ($status == 'Applied') {
+                                                    ?>
                                                         <input type="hidden" id="noti_id" value="<?= $rows['noti_id'] ?>">
-                                                            <a title="Delete" class="delete_noti" style="margin-right:10px"><span class="badge bg-danger"><i class="bi bi-trash"></i></span></a>
-                                                        <?php
+                                                        <a title="Delete" class="delete_noti" style="margin-right:10px"><span class="badge bg-danger"><i class="bi bi-trash"></i></span></a>
+                                                    <?php
                                                     } else {
                                                         echo '';
                                                     }
                                                     ?>
-                                                   
+
                                                     <a href="<?= $rows['noti_path'] ?>" title="View"><span class='badge bg-<?= $class ?>'><i class="bi bi-<?= $disabled ?>"></i></span></a>
                                                 </div>
                                             </td>
@@ -183,58 +183,58 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
         <script>
             $(document).ready(function() {
 
-            // var table = $('#myTable_2').DataTable({
-            //     responsive: true,
-            //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-            // })
+                // var table = $('#myTable_2').DataTable({
+                //     responsive: true,
+                //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                // })
 
-            // table.button().container().appendTo('#myTable_2_wrapper .col-md-6:eq(0)')
+                // table.button().container().appendTo('#myTable_2_wrapper .col-md-6:eq(0)')
 
-            $('.delete_noti').click(function(e) {
-                e.preventDefault();
-                // console.log("clicked")
-                var noti_id = $(this).closest(".find_noti_id").find('#noti_id').val();
-                console.log(noti_id)
+                $('.delete_noti').click(function(e) {
+                    e.preventDefault();
+                    // console.log("clicked")
+                    var noti_id = $(this).closest(".find_noti_id").find('#noti_id').val();
+                    console.log(noti_id)
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Delete!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "POST",
-                            url: "inquiry_process.php",
-                            data: {
-                                "delete_noti": 1,
-                                "noti_id": noti_id,
-                            },
-                            success: function(response) {
-                                Swal.fire(
-                                    'Deleted!',
-                                    '',
-                                    'success'
-                                ).then((result) => {
-                                    location.reload();
-                                })
-                            },
-                            error: function(response) {
-                                Swal.fire(
-                                    'Failed!',
-                                    '',
-                                    'warning'
-                                ).then((result) => {
-                                    location.reload();
-                                })
-                            }
-                        })
-                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Delete!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: "POST",
+                                url: "inquiry_process.php",
+                                data: {
+                                    "delete_noti": 1,
+                                    "noti_id": noti_id,
+                                },
+                                success: function(response) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        '',
+                                        'success'
+                                    ).then((result) => {
+                                        location.reload();
+                                    })
+                                },
+                                error: function(response) {
+                                    Swal.fire(
+                                        'Failed!',
+                                        '',
+                                        'warning'
+                                    ).then((result) => {
+                                        location.reload();
+                                    })
+                                }
+                            })
+                        }
+                    })
                 })
-            })
             });
         </script>
     <?php } else { ?>

@@ -4,7 +4,7 @@ include "db_conn.php";
 if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "include_header.php";
 ?>
-    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true') { ?>
+    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true' || $_SESSION['role'] == 'superuser') { ?>
         <div class="row mt-3">
             <div class="col-md-12 mb-3">
                 <div class="card">

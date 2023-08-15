@@ -7,3 +7,6 @@ Redefine user role
     3) User - Only can view & manipulate data from own branch 
 
 Create manage user module for Superuser
+
+
+Get id after insert data (https://stackoverflow.com/questions/897356/php-mysql-insert-row-then-get-id#:~:text=%24query_new%20%3D%20%22INSERT%20INTO%20students%20%28courseid%2C%20coursename%29%20VALUES,%5B%27coursename%27%5D%29%3B%20%24query_new-%3Eexecute%20%28%29%3B%20%24course_id%20%3D%20%24query_new-%3Einsert_id%3B%20%24query_new-%3Eclose%20%28%29%3B)

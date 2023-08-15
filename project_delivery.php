@@ -6,7 +6,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $branch = $_SESSION['branch'];
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
         <!-- For Admin -->
         <div class="row mt-3">
             <div class="col-md-12">
@@ -18,33 +18,33 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                     </div>
                     <div class="card-body">
 
-                    <form action="project_delivery.php" method="post">
-                        <div class="row mb-3">
-                        
-                            <div class="col-sm-2">
-                                <select class="form-select" name="year" required>
-                                    <option value='' selected>Year</option>
-                                    <?php
-                                        $get_year = mysqli_query($conn, "SELECT DISTINCT YEAR(s_award_date) AS year FROM securement");
-                                        while($a = mysqli_fetch_assoc($get_year)){
-                                            echo "<option>".$a['year']."</option>";
-                                        }
-                                    ?>
-                                </select>                           
-                            </div> 
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-primary" name="select_year">Submit</button>
-                            </div>
-                        </div>
-                    </form>
+                        <form action="project_delivery.php" method="post">
+                            <div class="row mb-3">
 
-                    <?php
-                    if(isset($_POST['select_year'])) {
-                        $year = $_POST['year'];
-                    } else {
-                        $year = date("Y");
-                    }
-                    ?>
+                                <div class="col-sm-2">
+                                    <select class="form-select" name="year" required>
+                                        <option value='' selected>Year</option>
+                                        <?php
+                                        $get_year = mysqli_query($conn, "SELECT DISTINCT YEAR(s_award_date) AS year FROM securement");
+                                        while ($a = mysqli_fetch_assoc($get_year)) {
+                                            echo "<option>" . $a['year'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary" name="select_year">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <?php
+                        if (isset($_POST['select_year'])) {
+                            $year = $_POST['year'];
+                        } else {
+                            $year = date("Y");
+                        }
+                        ?>
 
                         <div class="data_table">
                             <table id="myTable" class="table table-striped table-bordered" style="width: 100%">

@@ -409,6 +409,8 @@ if (isset($_POST['add_direct_award'])) {
     $year = date("Y", strtotime($award_date));
     $year2 = date("y", strtotime($award_date));
 
+    // Check for securement running number
+
     $check_data = mysqli_query($conn, "SELECT s_proj_no, s_no_inc FROM securement WHERE year(s_award_date) = '$year' AND s_branch = '$branch' ORDER BY s_no_inc desc");
     if (mysqli_num_rows($check_data) == 0) {
         echo '';
@@ -487,6 +489,10 @@ if (isset($_POST['add_direct_award'])) {
         }
     }
 
+    // echo $number;
+    // echo "<br>" . $id;
+    // die;
+
     $client_id = $_POST['quot_client'];
     $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
     $result_client = mysqli_query($conn, $retrieve_client);
@@ -497,6 +503,8 @@ if (isset($_POST['add_direct_award'])) {
         $quot_client_email = $client['client_email'];
     }
 
+    $quot_client_type = $_POST['quot_client_type'];
+    $quot_client_status = $_POST['quot_client_status'];
     $quot_title = $_POST['quot_title'];
     $quot_no = uniqid();
     $proj_code = $_POST['s_proj_code'];
@@ -580,7 +588,7 @@ if (isset($_POST['add_direct_award'])) {
         '$quot_work_scope',
         '$quot_proj_duration',
         '$quot_amount',
-        '$quot_tax',
+        '$quot_amount_tax',
         '$quot_client',
         '$quot_client_pic',
         '$quot_client_phone',
@@ -589,11 +597,13 @@ if (isset($_POST['add_direct_award'])) {
         '$quot_client_status'
     )";
 
+    $result2 = mysqli_query($conn, $sql2);
+
     $_SESSION['status_code'] = 'success';
     $_SESSION['message'] = "Success!";
 
     $user = $_SESSION['staff_no'];
-    $log_title = "Approved quotation : " . $quot_no;
+    $log_title = "Direct award added : " . $number;
     $log_status = "Success";
     $log_sql = "INSERT INTO log (log_title, log_user, log_status) VALUES ('$log_title','$user','$log_status')";
     $log_result = mysqli_query($conn, $log_sql);

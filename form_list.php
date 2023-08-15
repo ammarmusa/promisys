@@ -7,48 +7,48 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     $branch = $_SESSION['branch'];
     // print_r($_SESSION);
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
         <!-- For Admin -->
         <div class="row mt-3">
             <div class="col-md-12 mb-3">
                 <div class="card">
                     <div class="card-header">
                         <span><i class="bi bi-table me-2"></i></span> Form list
-                        
-                            <?php
-                            if($_SESSION['special']  == "true"){
-                            ?>
-                               <button class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#uploadForm">
-                            + Upload</button>
-                            <?php
-                            } else {
-                            ?>
-                                
-                            <?php
-                            }
-                            ?>
+
+                        <?php
+                        if ($_SESSION['special']  == "true") {
+                        ?>
+                            <button class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#uploadForm">
+                                + Upload</button>
+                        <?php
+                        } else {
+                        ?>
+
+                        <?php
+                        }
+                        ?>
 
                         <!-- Modal -->
                         <div class="modal fade" id="uploadForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Form information</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form action="document_process.php" method="post" enctype='multipart/form-data'>
-                                <div class="modal-body">
-                                    <input type="text" name="doc_version" required class="form-control" placeholder="Version">
-                                    <label for="date" class="col-form-label mt-3">Supporting files:</label>
-                                    <input name="upload[]" type="file" multiple="multiple" required class="form-control" />
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Form information</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="document_process.php" method="post" enctype='multipart/form-data'>
+                                        <div class="modal-body">
+                                            <input type="text" name="doc_version" required class="form-control" placeholder="Version">
+                                            <label for="date" class="col-form-label mt-3">Supporting files:</label>
+                                            <input name="upload[]" type="file" multiple="multiple" required class="form-control" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" name="upload_form" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" name="upload_form" class="btn btn-primary">Submit</button>
-                                </div>
-                            </form>
                             </div>
-                        </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -88,7 +88,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                                     <td>
                                                         <div class="d-flex justify-content-center find_form_id">
                                                             <?php
-                                                            if($_SESSION['special']  == "true"){
+                                                            if ($_SESSION['special']  == "true") {
                                                             ?>
                                                                 <input type="hidden" class="form_id" value="<?= $rows['doc_id'] ?>">
                                                                 <a href="<?= $rows['doc_path']; ?>"><span class='badge bg-dark'><i class="bi bi-eye"></i></span></a>

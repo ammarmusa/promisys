@@ -134,10 +134,18 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="new_client" id="new_client" onclick="validate()">
+                            <label class="form-check-label" for="new_client">Add New Client</label>
+                        </div>
+
+                        <div id="add_new_client"></div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="date" class="col-form-label mt-3">Client:</label>
-                                <select class="form-select" name="quot_client" aria-label="Default select example" required>
+                                <select class="form-select" id="quot_client" name="quot_client" aria-label="Default select example" required>
                                     <option selected value="">Open this select menu</option>
                                     <option value="TBA">TBA</option>
                                     <?php
@@ -196,6 +204,19 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        function validate() {
+            if (document.getElementById('new_client').checked) {
+                var from = jQuery('select[name=quot_client]');
+                from.attr('disabled', 'disabled');
+            } else {
+                var from = jQuery('select[name=quot_client]');
+                from.removeAttr("disabled");
+            }
+        }
+    </script>
+
 
 <?php
     include "include_footer.php";

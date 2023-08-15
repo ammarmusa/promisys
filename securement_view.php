@@ -38,51 +38,51 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             $amount_tax = number_format($q['quot_amount_tax'], 2);
                         }
                     ?>
-                    <?php
-                    $proj_no = $rows['s_proj_no'];
-                    $check_data = mysqli_query($conn, "SELECT * FROM action WHERE action_proj_no = '$proj_no' AND action_for = 'project'");
-                    if(mysqli_num_rows($check_data) == 0) {
-                        $status_data = 'No data';
-                    } else {
-                        $status_data = 'Has data';
-                    }
-
-                    $check_proj_deliver = mysqli_query($conn, "SELECT pd_proj_no FROM project_deliver WHERE pd_proj_no = '$proj_no'");
-                    if(mysqli_num_rows($check_proj_deliver) == 0) {
-                        $status_pd = 'No data';
-                    } else {
-                        $status_pd = 'Has data';
-                    }
-
-                    $check_schedule = mysqli_query($conn, "SELECT ps_proj_no FROM project_schedule WHERE ps_proj_no = '$proj_no'");
-                    if(mysqli_num_rows($check_schedule) == 0) {
-                        $status_ps = 'No data';
-                    } else {
-                        $status_ps = 'Has data';
-                    }
-
-                    $check_doc = mysqli_query($conn, "SELECT doc_proj_no FROM documents WHERE doc_proj_no = '$proj_no'");
-                    if(mysqli_num_rows($check_doc) == 0) {
-                        $status_doc = 'No data';
-                    } else {
-                        $status_doc = 'Has data';
-                    }
-                    ?>
-
-                    <?php
-                    if($status_data === 'Has data' || $status_pd === 'Has data' || $status_ps === 'Has data' || $status_doc ==='Has data') {
-                        ?>
-                    <a href="" class="btn btn-sm btn-secondary float-end" title="Delete" style="margin-right: 10px">
-                                                <i class="bi bi-trash"></i></a>
                         <?php
-                    } else {
+                        $proj_no = $rows['s_proj_no'];
+                        $check_data = mysqli_query($conn, "SELECT * FROM action WHERE action_proj_no = '$proj_no' AND action_for = 'project'");
+                        if (mysqli_num_rows($check_data) == 0) {
+                            $status_data = 'No data';
+                        } else {
+                            $status_data = 'Has data';
+                        }
+
+                        $check_proj_deliver = mysqli_query($conn, "SELECT pd_proj_no FROM project_deliver WHERE pd_proj_no = '$proj_no'");
+                        if (mysqli_num_rows($check_proj_deliver) == 0) {
+                            $status_pd = 'No data';
+                        } else {
+                            $status_pd = 'Has data';
+                        }
+
+                        $check_schedule = mysqli_query($conn, "SELECT ps_proj_no FROM project_schedule WHERE ps_proj_no = '$proj_no'");
+                        if (mysqli_num_rows($check_schedule) == 0) {
+                            $status_ps = 'No data';
+                        } else {
+                            $status_ps = 'Has data';
+                        }
+
+                        $check_doc = mysqli_query($conn, "SELECT doc_proj_no FROM documents WHERE doc_proj_no = '$proj_no'");
+                        if (mysqli_num_rows($check_doc) == 0) {
+                            $status_doc = 'No data';
+                        } else {
+                            $status_doc = 'Has data';
+                        }
                         ?>
-                    <input type="hidden" name="securement_no" id="securement_no" value="<?= $id ?>">
-                                            <a href="" class="btn btn-sm btn-danger float-end delete_securement" title="Delete" style="margin-right: 10px">
-                                                <i class="bi bi-trash"></i></a>
+
                         <?php
-                    }
-                    ?>
+                        if ($status_data === 'Has data' || $status_pd === 'Has data' || $status_ps === 'Has data' || $status_doc === 'Has data') {
+                        ?>
+                            <a href="" class="btn btn-sm btn-secondary float-end" title="Delete" style="margin-right: 10px">
+                                <i class="bi bi-trash"></i></a>
+                        <?php
+                        } else {
+                        ?>
+                            <input type="hidden" name="securement_no" id="securement_no" value="<?= $id ?>">
+                            <a href="" class="btn btn-sm btn-danger float-end delete_securement" title="Delete" style="margin-right: 10px">
+                                <i class="bi bi-trash"></i></a>
+                        <?php
+                        }
+                        ?>
                         <a href="securement_update.php?id=<?= $id ?>" class="btn btn-sm btn-primary float-end" title="Edit" style="margin-right: 10px">
                             <i class="bi bi-pencil-square"></i></a>
                         <a href="javascript:history.go(-1)" title="Back" class="btn btn-sm btn-warning float-end" style="margin-right: 10px">
@@ -97,7 +97,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <p><strong>Code: </strong><?= $rows['s_proj_code']; ?></p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Quotation reference: </strong><?= $quot_no ?> </p>
+                            <p><strong>Quotation reference: </strong><?= mb_substr($quot_no, 0, 3) == "SGS" ? $quot_no : "Direct Award" ?> </p>
                         </div>
                     </div>
                     <hr>

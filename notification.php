@@ -6,7 +6,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $branch = $_SESSION['branch'];
 ?>
-    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true') { ?>
+    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true' || $_SESSION['role'] == 'superuser') { ?>
         <div class="row">
             <div class="col-md-12 mb-3 mt-3">
                 <div class="card">
@@ -57,7 +57,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                         <?php
                                         $i = 1;
                                         while ($rows = mysqli_fetch_assoc($res)) {
-                                            if($rows['noti_path'] == '') {
+                                            if ($rows['noti_path'] == '') {
                                                 $disabled = 'eye-slash';
                                                 $class = 'secondary';
                                             } else {
@@ -67,7 +67,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                             $timestamp = strtotime($rows['noti_timestamp']);
                                             $date = date("d/m/Y", $timestamp);
                                             $status = $rows['noti_status'];
-                                            if($status == 'Applied') {
+                                            if ($status == 'Applied') {
                                                 $stat_code = "<span class='badge bg-warning text-dark'>Applied</span>";
                                             } else if ($status == 'Done') {
                                                 $stat_code = "<span class='badge bg-success'>Done</span>";
@@ -84,16 +84,16 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                                 <td>
                                                     <div class="d-flex justify-content-center find_noti_id">
                                                         <?php
-                                                        if($status == 'Applied') {
-                                                            ?>
+                                                        if ($status == 'Applied') {
+                                                        ?>
                                                             <input type="hidden" id="noti_id" value="<?= $rows['noti_id'] ?>">
-                                                             <a title="Done" class="delete_noti" style="margin-right:10px"><span class="badge bg-success"><i class="bi bi-check-square"></i></span></a>
-                                                            <?php
+                                                            <a title="Done" class="delete_noti" style="margin-right:10px"><span class="badge bg-success"><i class="bi bi-check-square"></i></span></a>
+                                                        <?php
                                                         } else {
                                                             echo '';
                                                         }
                                                         ?>
-                                                       
+
                                                         <a href="<?= $rows['noti_path'] ?>" title="View"><span class='badge bg-<?= $class ?>'><i class="bi bi-<?= $disabled ?>"></i></span></a>
 
                                                     </div>

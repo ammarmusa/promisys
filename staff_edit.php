@@ -5,7 +5,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "include_header.php";
     include "alert.php";
 ?>
-    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true') { ?>
+    <?php if ($_SESSION['role'] == 'admin' && $_SESSION['special'] == 'true' || $_SESSION['role'] == 'superuser') { ?>
         <?php
         $id = $_GET['id'];
         $sql = "SELECT * FROM staff WHERE id = '$id'";

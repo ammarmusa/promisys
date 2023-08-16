@@ -140,7 +140,42 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <label class="form-check-label" for="new_client">Add New Client</label>
                         </div>
 
-                        <div id="add_new_client"></div>
+
+                        <div id="add_new_client" style="display: none;">
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Company Name</label>
+                                    <input class="form-control" name="client_comp_name" type="text" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Address</label>
+                                    <input class="form-control" name="client_address" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Person Incharge</label>
+                                    <input class="form-control" name="client_pic" type="text" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Contact Number</label>
+                                    <input class="form-control" name="client_phone" type="text" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Fax</label>
+                                    <input class="form-control" name="client_fax" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Email</label>
+                                    <input class="form-control" name="client_email" type="email">
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
 
                         <div class="row">
                             <div class="col-md-6">
@@ -210,9 +245,11 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             if (document.getElementById('new_client').checked) {
                 var from = jQuery('select[name=quot_client]');
                 from.attr('disabled', 'disabled');
+                document.getElementById("add_new_client").style.display = "block"
             } else {
                 var from = jQuery('select[name=quot_client]');
                 from.removeAttr("disabled");
+                document.getElementById("add_new_client").style.display = "none"
             }
         }
     </script>

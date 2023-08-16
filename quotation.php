@@ -38,10 +38,12 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                         <!-- <a href="quotation_add.php" class="btn btn-sm btn-dark float-end">
                             Add Quotation
                         </a> -->
-                        <button type="button" class="btn btn-sm btn-secondary float-end" data-bs-toggle=" modal" data-bs-target="#client" style="margin-right:10px">
+                        <button type="button" class="btn btn-sm btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#client" style="margin-right:10px">
                             Clients
                         </button>
-
+                        <?php
+                        require "modal_client.php";
+                        ?>
                     </div>
 
                     <div class="card-body">
@@ -64,18 +66,6 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 </div>
                             </div>
                         </form>
-
-                        <!-- <a href="project_add.php" class="btn btn-sm btn-primary">Add Quotation</a> -->
-                        <!-- Modal Add Quotation-->
-
-                        <!-- Modal Client-->
-                        <?php
-                        include "modal_client.php";
-                        ?>
-
-                        <?php
-                        // $sql_by_year = "select * from quotation where year(quot_app_date) = 2020";
-                        ?>
 
                         <?php
                         if (isset($_POST['select_year'])) {

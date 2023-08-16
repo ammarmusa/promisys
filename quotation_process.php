@@ -4,15 +4,7 @@ include "db_conn.php";
 // if (isset($_SESSION['username']) && isset($_SESSION['id']) && isset($_POST['submit'])) {
 
 if (isset($_POST['add_quotation'])) {
-    $client_id = $_POST['quot_client'];
-    $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
-    $result_client = mysqli_query($conn, $retrieve_client);
-    while ($client = mysqli_fetch_assoc($result_client)) {
-        $quot_client = $client['client_comp_name'];
-        $quot_client_pic = $client['client_pic'];
-        $quot_client_phone = $client['client_phone'];
-        $quot_client_email = $client['client_email'];
-    }
+
     $apply_date = $_POST['apply_date'];
     $quot_site_location = $_POST['quot_site_location'];
     $quot_branch = $_POST['quot_branch'];
@@ -135,7 +127,50 @@ if (isset($_POST['add_quotation'])) {
     }
     $quot_type = $_POST['quot_type'];
 
+    // Add New Client
+    if (isset($_POST['new_client'])) {
+        $quot_client = $_POST['client_comp_name'];
+        $quot_client_pic = $_POST['client_pic'];
+        $quot_client_phone = $_POST['client_phone'];
+        $quot_client_email = $_POST['client_email'];
+        $quot_client_fax = $_POST['client_fax'];
+        $quot_client_address = $_POST['client_address'];
+
+        $sql_insert_client = "INSERT INTO clients (
+            client_comp_name,
+            client_address,
+            client_pic,
+            client_phone,
+            client_fax,
+            client_email
+        ) VALUES (
+            '$quot_client',
+            '$quot_client_address',
+            '$quot_client_pic',
+            '$quot_client_phone',
+            '$quot_client_fax',
+            '$quot_client_email'
+        )";
+        $res_ic = mysqli_query($conn, $sql_insert_client);
+        $quot_client = mysqli_insert_id($conn);
+    } else {
+        $client_id = $_POST['quot_client'];
+        $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
+        $result_client = mysqli_query($conn, $retrieve_client);
+        while ($client = mysqli_fetch_assoc($result_client)) {
+            $quot_client = $client['client_comp_name'];
+            $quot_client_pic = $client['client_pic'];
+            $quot_client_phone = $client['client_phone'];
+            $quot_client_email = $client['client_email'];
+        }
+    }
+
+    echo mysqli_insert_id($conn);
+
+    // echo "<pre>";
     // print_r($_POST);
+    // echo "</pre>";
+    die;
 
     $sql = "INSERT INTO quotation (
     quot_no,

@@ -138,19 +138,70 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="new_client" id="new_client" onclick="validate()">
+                            <label class="form-check-label" for="new_client">Add New Client</label>
+                        </div>
+
+                        <div id="add_new_client" style="display: none;">
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Company Name</label>
+                                    <input class="form-control" name="client_comp_name" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Address</label>
+                                    <input class="form-control" name="client_address" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Person Incharge</label>
+                                    <input class="form-control" name="client_pic" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Contact Number</label>
+                                    <input class="form-control" name="client_phone" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Fax</label>
+                                    <input class="form-control" name="client_fax" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="date" class="col-form-label mt-3">Email</label>
+                                    <input class="form-control" name="client_email" type="email">
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="client_list">
                                 <label for="date" class="col-form-label mt-3">Client:</label>
-                                <select class="form-select" name="quot_client" aria-label="Default select example" required>
+                                <select class="form-select" id="quot_client" name="quot_client" aria-label="Default select example">
                                     <option selected value="">Open this select menu</option>
-                                    <option value="TBA">TBA</option>
-                                    <?php
-                                    $client_result = mysqli_query($conn, "SELECT * FROM clients");
-                                    while ($client = mysqli_fetch_assoc($client_result)) {
-                                        $client_id = $client['client_id'];
-                                        $client_name = $client['client_comp_name'];
-                                    ?>
+                                    <!-- <?php
+                                            $client_result = mysqli_query($conn, "SELECT * FROM clients");
+                                            while ($client = mysqli_fetch_assoc($client_result)) {
+                                                $client_id = $client['client_id'];
+                                                $client_name = $client['client_comp_name'];
+                                            ?>
                                         <option value="<?= $client_id ?>"><?= $client_name ?></option>
+                                    <?php
+                                            }
+                                    ?> -->
+
+                                    <?php
+                                    $query = "SELECT client_id, client_comp_name FROM clients ORDER BY client_comp_name ASC";
+                                    $client_result = $conn->query($query);
+                                    foreach ($client_result as $client) {
+                                    ?>
+                                        <option value="<?= $client["client_id"] ?>"> <?= $client["client_comp_name"] ?></option>
                                     <?php
                                     }
                                     ?>
@@ -193,6 +244,28 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        var select_box_element = document.querySelector('#quot_client');
+
+        dselect(select_box_element, {
+            search: true
+        });
+
+        function validate() {
+            if (document.getElementById('new_client').checked) {
+                var from = jQuery('select[name=quot_client]');
+                from.attr('disabled', 'disabled');
+                document.getElementById("add_new_client").style.display = "block"
+                document.getElementById("client_list").style.display = "none"
+            } else {
+                var from = jQuery('select[name=quot_client]');
+                from.removeAttr("disabled");
+                document.getElementById("add_new_client").style.display = "none"
+                document.getElementById("client_list").style.display = "block"
+            }
+        }
+    </script>
 
 <?php
     include "include_footer.php";

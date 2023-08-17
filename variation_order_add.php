@@ -3,17 +3,18 @@ session_start();
 include "db_conn.php";
 if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "include_header.php";
+    include "alert.php";
 ?>
 
     <div class="row">
         <div class="mb-3 mt-3">
             <div class="card">
                 <div class="card-header">
-                    <span><i class="bi bi-table me-2"></i></span> Add Tender
+                    <span><i class="bi bi-table me-2"></i></span> Add Variation Order
                 </div>
                 <div class="card-body">
                     <form action="quotation_process.php" method="post" class="" enctype='multipart/form-data'>
-                        <input type="hidden" name="quot_type" value="TENDER">
+                        <input type="hidden" name="quot_type" value="VARIATION ORDER">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="date" class="col-form-label ">Apply Date</label>
@@ -110,7 +111,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="date" class="col-form-label mt-3">Project duration:</label>
-                                <input class="form-control" step=".01" name="quot_proj_duration" type="number" placeholder="" required>
+                                <input class="form-control" step="1.00" name="quot_proj_duration" type="number" placeholder="" required>
                             </div>
                             <div class="col-md-2">
                                 <label for="" class="col-form-label mt-3">-</label>
@@ -139,7 +140,6 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             <input class="form-check-input" type="checkbox" name="new_client" id="new_client" onclick="validate()">
                             <label class="form-check-label" for="new_client">Add New Client</label>
                         </div>
-
 
                         <div id="add_new_client" style="display: none;">
                             <hr>
@@ -175,6 +175,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             </div>
                             <hr>
                         </div>
+
 
                         <div class="row">
                             <div class="col-md-6" id="client_list">
@@ -238,7 +239,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
 
                         <div class="mt-5">
                             <!-- <button type="submit" class="btn btn-primary" name="add_quotation">Submit</button> -->
-                            <button type="submit" class="btn btn-primary" name="add_quotation">Submit</button>
+                            <button type="submit" class="btn btn-primary" name="add_quotation" id="submit">Submit</button>
                             <a href="quotation.php" class="btn btn-danger">
                                 Cancel</a>
                         </div>
@@ -269,6 +270,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             }
         }
     </script>
+
 
 <?php
     include "include_footer.php";

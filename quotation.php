@@ -32,7 +32,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 <li><a class="dropdown-item" href="quotation_add.php">Quotation</a></li>
                                 <li><a class="dropdown-item" href="tender_add.php">Tender</a></li>
                                 <li><a class="dropdown-item" href="direct_award_add.php">Direct Award</a></li>
-                                <li><a class="dropdown-item" href="#">Variation Order</a></li>
+                                <li><a class="dropdown-item" href="variation_order_add.php">Variation Order</a></li>
                             </ul>
                         </div>
                         <!-- <a href="quotation_add.php" class="btn btn-sm btn-dark float-end">

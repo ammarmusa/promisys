@@ -127,7 +127,10 @@ if (isset($_POST['add_quotation'])) {
     }
     $quot_type = $_POST['quot_type'];
 
+
+
     // Add New Client
+
     if (isset($_POST['new_client'])) {
         $quot_client = $_POST['client_comp_name'];
         $quot_client_pic = $_POST['client_pic'];
@@ -154,6 +157,12 @@ if (isset($_POST['add_quotation'])) {
         $res_ic = mysqli_query($conn, $sql_insert_client);
         $quot_client = mysqli_insert_id($conn);
     } else {
+        if ($_POST['quot_client'] === "") {
+            $_SESSION['status_code'] = 'error';
+            $_SESSION['message'] = "Client is empty!";
+            header("Location: quotation_add.php");
+            die;
+        }
         $client_id = $_POST['quot_client'];
         $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
         $result_client = mysqli_query($conn, $retrieve_client);
@@ -165,12 +174,13 @@ if (isset($_POST['add_quotation'])) {
         }
     }
 
-    echo mysqli_insert_id($conn);
+    // echo $quot_client;
 
     // echo "<pre>";
     // print_r($_POST);
     // echo "</pre>";
-    die;
+    // echo $quot_client . "<br>" . $quot_client_pic . "<br>" . $quot_client_phone . "<br>" . $quot_client_email . "<br>" . $quot_client_fax . "<br>" . $quot_client_address . "<br>";
+    // die;
 
     $sql = "INSERT INTO quotation (
     quot_no,
@@ -528,14 +538,47 @@ if (isset($_POST['add_direct_award'])) {
     // echo "<br>" . $id;
     // die;
 
-    $client_id = $_POST['quot_client'];
-    $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
-    $result_client = mysqli_query($conn, $retrieve_client);
-    while ($client = mysqli_fetch_assoc($result_client)) {
-        $quot_client = $client['client_comp_name'];
-        $quot_client_pic = $client['client_pic'];
-        $quot_client_phone = $client['client_phone'];
-        $quot_client_email = $client['client_email'];
+    if (isset($_POST['new_client'])) {
+        $quot_client = $_POST['client_comp_name'];
+        $quot_client_pic = $_POST['client_pic'];
+        $quot_client_phone = $_POST['client_phone'];
+        $quot_client_email = $_POST['client_email'];
+        $quot_client_fax = $_POST['client_fax'];
+        $quot_client_address = $_POST['client_address'];
+
+        $sql_insert_client = "INSERT INTO clients (
+            client_comp_name,
+            client_address,
+            client_pic,
+            client_phone,
+            client_fax,
+            client_email
+        ) VALUES (
+            '$quot_client',
+            '$quot_client_address',
+            '$quot_client_pic',
+            '$quot_client_phone',
+            '$quot_client_fax',
+            '$quot_client_email'
+        )";
+        $res_ic = mysqli_query($conn, $sql_insert_client);
+        $quot_client = mysqli_insert_id($conn);
+    } else {
+        if ($_POST['quot_client'] === "") {
+            $_SESSION['status_code'] = 'error';
+            $_SESSION['message'] = "Client is empty!";
+            header("Location: quotation_add.php");
+            die;
+        }
+        $client_id = $_POST['quot_client'];
+        $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
+        $result_client = mysqli_query($conn, $retrieve_client);
+        while ($client = mysqli_fetch_assoc($result_client)) {
+            $quot_client = $client['client_comp_name'];
+            $quot_client_pic = $client['client_pic'];
+            $quot_client_phone = $client['client_phone'];
+            $quot_client_email = $client['client_email'];
+        }
     }
 
     $quot_client_type = $_POST['quot_client_type'];

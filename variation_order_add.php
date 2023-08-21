@@ -4,6 +4,7 @@ include "db_conn.php";
 if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "include_header.php";
     include "alert.php";
+    $branch = $_SESSION['branch'];
 ?>
 
     <div class="row">
@@ -15,7 +16,26 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                 <div class="card-body">
                     <form action="quotation_process.php" method="post" class="" enctype='multipart/form-data'>
                         <input type="hidden" name="quot_type" value="VARIATION ORDER">
+
                         <div class="row">
+                            <div class="col-md-12" id="">
+                                <label for="quot_link" class="col-form-label mt-3">Project:</label>
+                                <select class="form-select" id="quot_link" name="quot_link" aria-label="Default select example" required>
+                                    <option selected value="">Select a project</option>
+
+                                    <?php
+                                    $query = "SELECT s_proj_no, s_proj_code,s_branch, s_quot_no FROM securement WHERE s_branch = '$branch' AND s_quot_no LIKE 'SGS%' ORDER BY s_proj_no ASC";
+                                    $proj_result = $conn->query($query);
+                                    foreach ($proj_result as $proj) {
+                                    ?>
+                                        <option value="<?= $proj["s_proj_no"] ?>"> <?= $proj["s_proj_no"] ?> - <?= $proj["s_proj_code"] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
                             <div class="col-md-4">
                                 <label for="date" class="col-form-label ">Apply Date</label>
                                 <input type="date" name="apply_date" class="form-control" required>
@@ -239,7 +259,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
 
                         <div class="mt-5">
                             <!-- <button type="submit" class="btn btn-primary" name="add_quotation">Submit</button> -->
-                            <button type="submit" class="btn btn-primary" name="add_quotation" id="submit">Submit</button>
+                            <button type="submit" class="btn btn-primary" name="add_variation_order" id="submit">Submit</button>
                             <a href="quotation.php" class="btn btn-danger">
                                 Cancel</a>
                         </div>
@@ -253,6 +273,12 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
         var select_box_element = document.querySelector('#quot_client');
 
         dselect(select_box_element, {
+            search: true
+        });
+
+        var s_link = document.querySelector('#quot_link');
+
+        dselect(s_link, {
             search: true
         });
 

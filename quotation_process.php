@@ -687,3 +687,298 @@ if (isset($_POST['add_direct_award'])) {
     $log_result = mysqli_query($conn, $log_sql);
     header('location: securement.php');
 }
+
+
+if (isset($_POST['add_variation_order'])) {
+    $quot_link = $_POST['quot_link'];
+    $apply_date = $_POST['apply_date'];
+    $quot_site_location = $_POST['quot_site_location'];
+    $quot_branch = $_POST['quot_branch'];
+    $quot_proj_state = $_POST['project_location'];
+    $quot_title = $_POST['quot_title'];
+    $quot_pic = $_POST['quot_pic'];
+    $quot_client_type = $_POST['quot_client_type'];
+    $quot_client_status = $_POST['quot_client_status'];
+    $quot_work_scope = $_POST['quot_work_scope'];
+
+    $quot_sub_deadline = $_POST['quot_sub_deadline'];
+    $quot_market_segmentation = $_POST['quot_market_segmentation'];
+    $days = $_POST['days'];
+    if ($days == "Day") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Day";
+    } else if ($days == "Month") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Month";
+    } else if ($days == "Week") {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Week";
+    } else {
+        $quot_proj_duration = $_POST['quot_proj_duration'] . " Year";
+    }
+
+    $quot_site_location = $_POST['quot_site_location'];
+    $quot_amount = $_POST['quot_amount'];
+
+    $year = date("Y", strtotime($apply_date));
+    $year2 = date("y", strtotime($apply_date));
+
+    // $sql_by_year = "select * from quotation where year(quot_app_date) = 2020";
+
+    $query = "select * from quotation where year(quot_app_date) = '$year' AND quot_branch = '$quot_branch' order by quot_no_inc desc";
+    $result = mysqli_query($conn, $query);
+    if (mysqli_num_rows($result) == 0) {
+        echo '';
+    } else {
+        $row = mysqli_fetch_array($result);
+        $lastid = $row['quot_no'];
+    }
+    if ($quot_branch == "HQ") {
+        $code = "";
+        // echo strlen($lastid);
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . "Q001";
+            $id = '001';
+        } else {
+            if (strlen($lastid) == 10) {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            } else {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 10);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            }
+        }
+    } else if ($quot_branch == "Pahang") {
+        $code = "(C)";
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . "Q001";
+            $id = '001';
+        } else {
+            if (strlen($lastid) == 10) {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            } else {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 10);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            }
+        }
+    } else {
+        $code = "(J)";
+        if (empty($lastid)) {
+            $number = "SGS" . $code . "." . $year2 . "Q001";
+            $id = '001';
+        } else {
+            if (strlen($lastid) == 10) {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 7);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            } else {
+                $idd = str_replace("SGS" . $code . ".21Q", "", $lastid);
+                $idd = substr($lastid, 10);
+                // echo $idd;
+                $id = str_pad($idd + 1, 3, 0, STR_PAD_LEFT);
+                $number = "SGS" . $code . "." . $year2 . "Q" . $id;
+            }
+        }
+    }
+
+
+
+    // echo $quot_proj_duration;
+
+    if (isset($_POST['tax'])) {
+        $taxed = $quot_amount / 1.06;
+        // $after_tax = $quot_amount - $taxed;
+        $quot_amount_tax = round($taxed, 2);
+    } else {
+        $quot_amount_tax = $quot_amount;
+    }
+    $quot_type = $_POST['quot_type'];
+
+
+
+    // Add New Client
+
+    if (isset($_POST['new_client'])) {
+        $quot_client = $_POST['client_comp_name'];
+        $quot_client_pic = $_POST['client_pic'];
+        $quot_client_phone = $_POST['client_phone'];
+        $quot_client_email = $_POST['client_email'];
+        $quot_client_fax = $_POST['client_fax'];
+        $quot_client_address = $_POST['client_address'];
+
+        $sql_insert_client = "INSERT INTO clients (
+            client_comp_name,
+            client_address,
+            client_pic,
+            client_phone,
+            client_fax,
+            client_email
+        ) VALUES (
+            '$quot_client',
+            '$quot_client_address',
+            '$quot_client_pic',
+            '$quot_client_phone',
+            '$quot_client_fax',
+            '$quot_client_email'
+        )";
+        $res_ic = mysqli_query($conn, $sql_insert_client);
+        $quot_client = mysqli_insert_id($conn);
+    } else {
+        if ($_POST['quot_client'] === "") {
+            $_SESSION['status_code'] = 'error';
+            $_SESSION['message'] = "Client is empty!";
+            header("Location: quotation_add.php");
+            die;
+        }
+        $client_id = $_POST['quot_client'];
+        $retrieve_client = "SELECT * FROM clients WHERE client_id = '$client_id'";
+        $result_client = mysqli_query($conn, $retrieve_client);
+        while ($client = mysqli_fetch_assoc($result_client)) {
+            $quot_client = $client['client_comp_name'];
+            $quot_client_pic = $client['client_pic'];
+            $quot_client_phone = $client['client_phone'];
+            $quot_client_email = $client['client_email'];
+        }
+    }
+
+    // echo $quot_client;
+
+    // echo "<pre>";
+    // print_r($_POST);
+    // echo "</pre>";
+    // echo $quot_client . "<br>" . $quot_client_pic . "<br>" . $quot_client_phone . "<br>" . $quot_client_email . "<br>" . $quot_client_fax . "<br>" . $quot_client_address . "<br>";
+    // die;
+
+    $sql = "INSERT INTO quotation (
+    quot_no,
+    quot_no_inc,
+    quot_app_date,
+    quot_proj_state,
+    quot_branch,
+    quot_title,
+    quot_pic,
+    quot_client_type,
+    quot_client_status,
+    quot_work_scope,
+    quot_client,
+    quot_client_pic,
+    quot_client_phone,
+    quot_client_email,
+    quot_sub_deadline,
+    quot_market_segmentation,
+    quot_proj_duration,
+    quot_site_location,
+    quot_amount,
+    quot_amount_tax,
+    quot_status,
+    quot_type,
+    quot_link
+    )
+    VALUES (
+    '$number',
+    '$id',
+    '$apply_date',
+    '$quot_proj_state',
+    '$quot_branch',
+    '$quot_title',
+    '$quot_pic',
+    '$quot_client_type',
+    '$quot_client_status',
+    '$quot_work_scope',
+    '$quot_client',
+    '$quot_client_pic',
+    '$quot_client_phone',
+    '$quot_client_email',
+    '$quot_sub_deadline',
+    '$quot_market_segmentation',
+    '$quot_proj_duration',
+    '$quot_site_location',
+    '$quot_amount',
+    '$quot_amount_tax',
+    'applied',
+    '$quot_type',
+    '$quot_link'
+    )";
+    $res = mysqli_query($conn, $sql);
+
+    $files = array_filter($_FILES['upload']['name']); //Use something similar before processing files.
+    // Count the number of uploaded files in array
+    $total_count = count($_FILES['upload']['name']);
+
+
+    // Loop through every file
+    for ($i = 0; $i < $total_count; $i++) {
+        //The temp file path is obtained
+        $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+
+        $path = 'quotation/' . $number;
+        // print_r($_POST);
+        // echo $path;
+
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
+        //A file path needs to be present
+        if ($tmpFilePath != "") {
+            //Setup our new file path
+            $newFilePath = $path . "/" . $_FILES['upload']['name'][$i];
+            echo $newFilePath . "<br>";
+            $file_name =  $_FILES['upload']['name'][$i];
+            //File is uploaded to temp dir
+            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                $sql_insert = "INSERT INTO documents (
+                    doc_proj_no,
+                    doc_name,
+                    doc_remark,
+                    doc_path,
+                    doc_date,
+                    doc_upload_by
+                ) VALUES (
+                    '$number',
+                    '$file_name',
+                    'Supporting files.',
+                    '$newFilePath',
+                    '$apply_date',
+                    '$quot_pic'
+                )";
+
+                $insert_res = mysqli_query($conn, $sql_insert);
+            }
+        }
+    }
+
+    if ($res) {
+        $_SESSION['status_code'] = 'success';
+        $_SESSION['message'] = "Quotation Added!";
+
+        $user = $_SESSION['staff_no'];
+        $log_title = "Added a new quotation " . $number;
+        $log_status = "Success";
+        $log_sql = "INSERT INTO log (log_title, log_user, log_status) VALUES ('$log_title','$user','$log_status')";
+        $log_result = mysqli_query($conn, $log_sql);
+        header("Location: quotation.php");
+    } else {
+        $_SESSION['status_code'] = 'error';
+        $_SESSION['message'] = "Quotation add failed!";
+
+        $user = $_SESSION['staff_no'];
+        $log_title = "Added a new quotation";
+        $log_status = "Fail";
+        $log_sql = "INSERT INTO log (log_title, log_user, log_status) VALUES ('$log_title','$user','$log_status')";
+        $log_result = mysqli_query($conn, $log_sql);
+        header("Location: quotation.php");
+    }
+}

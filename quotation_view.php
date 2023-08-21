@@ -7,7 +7,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     $id = $_GET['id'] ?? null;
 
 ?>
-    <?php if ($_SESSION['role'] == 'admin') { ?>
+    <?php if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'superuser') { ?>
         <div class="row mt-3" style="font-size: 90%">
             <div class="col-md-8 mb-3">
                 <div class="card">
@@ -23,6 +23,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 $state = $rows['quot_proj_state'];
                                 $branch = $rows['quot_branch'];
                                 $status = $rows['quot_status'];
+                                $link = $rows['quot_link'];
                         ?>
                                 <span><i class="bi bi-table me-2"></i></span> <?= $proj_no; ?>
                                 <input type="hidden" name="quotation_id" id="quotation_id" value="<?= $id ?>">
@@ -51,7 +52,17 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 ?>
                                 <a href="quotation_edit.php?id=<?= $id ?>" class="btn btn-sm btn-primary float-end" title="Edit" style="margin-right: 10px">
                                     <i class="bi bi-pencil-square"></i></a>
-                                <a href="quotation.php" title="Back" class="btn btn-sm btn-warning float-end" title="Edit" style="margin-right: 10px">
+
+                                <?php
+                                if ($link != "") {
+                                    $get_id = mysqli_query($conn, "SELECT quot_id FROM quotation WHERE quot_no")
+                                ?>
+                                    <a href="quotation.php" class="btn btn-sm btn-secondary float-end" title="Link" style="margin-right: 10px">
+                                        <i class="bi bi-link"></i></a>
+                                <?php
+                                }
+                                ?>
+                                <a href="quotation.php" title="Back" class="btn btn-sm btn-warning float-end" style="margin-right: 10px">
                                     <i class="bi bi-arrow-left-square"></i></a>
                     </div>
                     <div class="card-body">

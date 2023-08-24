@@ -55,9 +55,16 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
 
                                 <?php
                                 if ($link != "") {
-                                    $get_id = mysqli_query($conn, "SELECT quot_id FROM quotation WHERE quot_no")
+                                    $get_id = mysqli_query($conn, "SELECT s_quot_no, s_proj_no, quot_id, quot_no
+                                    FROM securement
+                                    INNER JOIN quotation
+                                    ON securement.s_quot_no = quotation.quot_no WHERE securement.s_proj_no = '$link'");
+                                    while ($gi = mysqli_fetch_assoc($get_id)) {
+                                        $link_quot_id = $gi['quot_id'];
+                                    }
                                 ?>
-                                    <a href="quotation.php" class="btn btn-sm btn-secondary float-end" title="Link" style="margin-right: 10px">
+
+                                    <a href="quotation_view.php?id=<?= $link_quot_id ?>" class="btn btn-sm btn-secondary float-end" title="Link" style="margin-right: 10px">
                                         <i class="bi bi-link"></i></a>
                                 <?php
                                 }

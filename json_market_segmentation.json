@@ -4,5 +4,8 @@
   { "name": "UTILITY", "value": "UTILITY" },
   { "name": "AVIATION", "value": "AVIATION" },
   { "name": "POWER", "value": "POWER" },
-  { "name": "PLANTATION", "value": "PLANTATION" }
+  { "name": "ENVIRONMENTAL", "value": "ENVIRONMENTAL" },
+  { "name": "INDIVIDUAL/PUBLIC", "value": "INDIVIDUAL/PUBLIC" },
+  { "name": "PLANTATION", "value": "PLANTATION" },
+  { "name": "OTHERS", "value": "OTHERS" }
 ]

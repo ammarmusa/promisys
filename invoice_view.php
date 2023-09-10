@@ -6,6 +6,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
     include "alert.php";
     $id = $_GET['id'] ?? null;
     $proj_no = '';
+    $cn = false;
+    $cn_amount = "0";
     // echo $_SERVER["REQUEST_URI"];
     // echo $_SERVER['HTTP_REFERER'];
 ?>
@@ -17,7 +19,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
         while ($rows = mysqli_fetch_assoc($retrieve_data)) {
             $proj_no = $rows['payment_proj_no'];
             $date = date("d/m/Y", strtotime($rows['payment_date']));
-            $total = $rows['payment_tot_amt'];
+            $total = $rows['payment_tot_amt'] - $cn_amount;
             $amount_2 = number_format($rows['payment_tot_amt'], 2);
         }
 
@@ -32,8 +34,18 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             $client = $qd['quot_client'];
             $title = $qd['quot_title'];
         }
-        ?>
 
+        $check_cn = mysqli_query($conn, "SELECT * FROM credit_note WHERE cn_proj_no = '$proj_no'");
+        if (mysqli_num_rows($check_cn) == 0) {
+            $cn = true;
+        } else {
+            while ($cn_row = mysqli_fetch_assoc($check_cn)) {
+                $cn_id = $cn_row['cn_id'];
+                $cn_amount = $cn_row['cn_amount'];
+                $cn_remark = $cn_row['cn_remark'];
+            }
+        }
+        ?>
 
         <div class="row mt-3">
             <div class="col-md-12 mb-3">
@@ -45,6 +57,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                     </button> -->
                         <a href="project_delivery.php" class="btn btn-sm btn-warning float-end">
                             <i class="bi bi-arrow-left-square"></i></a>
+
                         <span><i class="bi bi-table me-2"></i></span> Payment Information
                     </div>
 
@@ -74,7 +87,15 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                         <div class="mb-3 row">
                             <label for="staticEmail" class="col-sm-2 col-form-label">Fee Amount: </label>
                             <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="RM <?= $amount_2; ?>">
+                                <!-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="RM <?= $amount_2; ?>"> -->
+                                <?= $amount_2; ?>
+                                <?php
+                                if ($cn === false) {
+                                    echo "<br><span style='color:green; font-size:90%'>CN applied (-RM " . $cn_amount . ")</span>";
+                                } else {
+                                    echo "";
+                                }
+                                ?>
                             </div>
                         </div>
                         <!-- <div class="mb-3 row">
@@ -100,6 +121,22 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
             </div>
         </div>
 
+        <?php
+        if ($cn === false) {
+        ?>
+            <div class="card">
+                <h5 class="card-header bg-primary text-white">Credit Note Details</h5>
+                <div class="card-body">
+                    <h5 class="card-title">Amount : RM <?= number_format($cn_amount, 2) ?></h5>
+                    <p class="card-text"><?= $cn_remark ?></p>
+                    <input type="hidden" name="cn_id" id="cn_id" value="<?= $cn_id ?>">
+                    <a href="" class="btn btn-danger" id="delete_cn">Delete</a>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+
         <div class="row">
             <div class="col-md-12 mt-3">
                 <div class="card">
@@ -117,6 +154,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                                 $tot = $tot + $ct['pd_amount'];
                             }
                         }
+
                         if ($tot < $total) {
                         ?>
                             <button type="button" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -134,6 +172,39 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                         <!-- Modal -->
                         <?php
                         include "modal_invoice_request.php";
+                        ?>
+
+                        <?php
+                        if ($cn === true) {
+                            if (($tot / $total) * 100 <= 90) {
+                        ?>
+                                <button type="button" style="margin-right:10px" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#creditNote">
+                                    Request credit note
+                                </button>
+                            <?php
+                            } else {
+                            ?>
+                                <button disabled type="button" style="margin-right:10px" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#creditNote">
+                                    Request credit note
+                                </button>
+                            <?php
+                            }
+                            ?>
+                            <!-- <button type="button" style="margin-right:10px" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#creditNote">
+                                Request credit note
+                            </button> -->
+                        <?php
+                        } else {
+                        ?>
+                            <button disabled type="button" style="margin-right:10px" class="btn btn-sm btn-dark float-end" data-bs-toggle="modal" data-bs-target="#creditNote">
+                                Request credit note
+                            </button>
+                        <?php
+                        }
+                        ?>
+                        <!-- Modal -->
+                        <?php
+                        include "modal_invoice_cn.php";
                         ?>
                     </div>
                     <div class="card-body">
@@ -270,7 +341,8 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> <!-- END OF INVOICE CARD -->
+
     <?php } else { ?>
         <h2>You are not authorized to view this page. Please contact admin for enquiries.</h2>
     <?php } ?>
@@ -363,6 +435,51 @@ if (isset($_SESSION['username']) && isset($_SESSION['id'])) {
                             error: function(response) {
                                 Swal.fire(
                                     'Action failed to delete!',
+                                    '',
+                                    'warning'
+                                ).then((result) => {
+                                    location.reload();
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+
+            $('#delete_cn').click(function(e) {
+                e.preventDefault();
+                // console.log("clicked")
+                var cn_id = document.getElementById('cn_id').value
+                console.log(cn_id)
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "credit_note_process.php",
+                            data: {
+                                "delete_cn": 1,
+                                "cn_id": cn_id,
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Credit note deleted!',
+                                    '',
+                                    'success'
+                                ).then((result) => {
+                                    location.reload();
+                                })
+                            },
+                            error: function(response) {
+                                Swal.fire(
+                                    'Credit Note failed to delete!',
                                     '',
                                     'warning'
                                 ).then((result) => {
